@@ -40,12 +40,23 @@ AppAsset::register($this);
     } else {
         $menuItems = [
 	        ['label' => 'Home', 'url' => ['/site/index']],
-	              ['label' => 'About', 'url' => ['/site/about']],
+                ['label' => 'About', 'url' => ['/site/about']],
 	        ['label' => 'Contact', 'url' => ['/site/contact']],
-	        [   'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+	        ['label' => 'Jamaah', 'url' => ['/jamaah']],
+	        ['label' => 'Lembaga', 'url' => ['/lembaga']],
+                ['label' => 'Yatim', 'url' => ['/yatim']],
+	        ['label' => 'Auth', 'url' => ['#'],
+                    'items' => [
+                        ['label' => 'Assignment', 'url' => ['/auth-assignment']],
+                        ['label' => 'Item', 'url' => ['/auth-item']],
+                        ['label' => 'Item Child', 'url' => ['/auth-item-child']],
+                        ['label' => 'Rule', 'url' => ['/auth-rule']],
+                    ]
+                ],
+                [   'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
 	            'url' => ['/site/logout'],
 	            'linkOptions' => ['data-method' => 'post']
-	        ]
+	        ],
         ];
     }
     
