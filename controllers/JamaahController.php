@@ -8,6 +8,7 @@ use app\models\JamaahSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
 
 /**
  * JamaahController implements the CRUD actions for Jamaah model.
@@ -63,14 +64,20 @@ class JamaahController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Jamaah();
+        if(Yii::$app->user->can('create-jamaah'))
+        {
+            $model = new Jamaah();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('create', [
+                    'model' => $model,
+                ]);
+            }
+        }
+        else {
+            throw new ForbiddenHttpException;
         }
     }
 
@@ -82,17 +89,23 @@ class JamaahController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        if(Yii::$app->user->can('update-jamaah'))
+        {
+            $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+        }
+        else {
+            throw new ForbiddenHttpException;
         }
     }
-
+    
     /**
      * Deletes an existing Jamaah model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -101,9 +114,15 @@ class JamaahController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        if(Yii::$app->user->can('update-jamaah'))
+        {
+            $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+            return $this->redirect(['index']);
+        }
+        else {
+            throw new ForbiddenHttpException;
+        }
     }
 
     /**
