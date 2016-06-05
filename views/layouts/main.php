@@ -34,29 +34,62 @@ AppAsset::register($this);
         ],
     ]);
     
+    $userRoles = Yii::$app->authManager->getRolesByUser(Yii::$app->user->getId());
+    $userRole = '';
+ 
+    foreach ($userRoles as $role) { 
+        $userRole = $role->name;
+    }
+    
     if (Yii::$app->user->isGuest) {
         $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
+    } else if ($userRole == 'author' || $userRole =='editor') {
         $menuItems = [
-	        ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'About', 'url' => ['/site/about']],
-	        ['label' => 'Contact', 'url' => ['/site/contact']],
-	        ['label' => 'Jamaah', 'url' => ['/jamaah']],
-	        ['label' => 'Lembaga', 'url' => ['/lembaga']],
-                ['label' => 'Yatim', 'url' => ['/yatim']],
-	        ['label' => 'Auth', 'url' => ['#'],
-                    'items' => [
-                        ['label' => 'Assignment', 'url' => ['/auth-assignment']],
-                        ['label' => 'Item', 'url' => ['/auth-item']],
-                        ['label' => 'Item Child', 'url' => ['/auth-item-child']],
-                        ['label' => 'Rule', 'url' => ['/auth-rule']],
-                    ]
-                ],
-                [   'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-	            'url' => ['/site/logout'],
-	            'linkOptions' => ['data-method' => 'post']
-	        ],
+            ['label' => 'Jamaah', 'url' => ['/jamaah']],
+            ['label' => 'Yatim', 'url' => ['#'],
+                'items' => [
+                    ['label' => 'Lembaga', 'url' => ['/lembaga']],
+                    ['label' => 'Anak', 'url' => ['/yatim']],
+                ]
+            ],	        
+            [   'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                'url' => ['/site/logout'],
+                'linkOptions' => ['data-method' => 'post']
+            ],
+        ];
+    } else if ($userRole == 'admin' || $userRole == 'author' || $userRole =='editor') {
+        $menuItems = [
+            ['label' => 'Jamaah', 'url' => ['/jamaah']],
+            ['label' => 'Yatim', 'url' => ['#'],
+                'items' => [
+                    ['label' => 'Lembaga', 'url' => ['/lembaga']],
+                    ['label' => 'Anak', 'url' => ['/yatim']],
+                ]
+            ],
+            ['label' => 'Auth', 'url' => ['#'],
+                'items' => [
+                    ['label' => 'Assignment', 'url' => ['/auth-assignment']],
+                    ['label' => 'Item', 'url' => ['/auth-item']],
+                    ['label' => 'Item Child', 'url' => ['/auth-item-child']],
+                    ['label' => 'Rule', 'url' => ['/auth-rule']],
+                ]
+            ],	        
+            [   'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                'url' => ['/site/logout'],
+                'linkOptions' => ['data-method' => 'post']
+            ],
+        ];
+    }
+    else {
+        $menuItems = [
+            ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'About', 'url' => ['/site/about']],
+            ['label' => 'Contact', 'url' => ['/site/contact']],
+            [   'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                'url' => ['/site/logout'],
+                'linkOptions' => ['data-method' => 'post']
+            ],
         ];
     }
     
